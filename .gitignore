@@ -1,0 +1,9 @@
+/node_modules
+# .next plus any alternate dist dir (NEXT_DIST_DIR — see next.config.js)
+.next
+.next-*/
+/out/
+.env*.local
+.DS_Store
+*.tsbuildinfo
+next-env.d.ts

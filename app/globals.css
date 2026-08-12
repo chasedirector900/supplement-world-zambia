@@ -1,0 +1,121 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Below md: nav sits on its own row under the logo row, so header is two
+     rows tall — (py-4 (32) + 48px button + 1px border) + (40px nav + 1px
+     border). The goal filter sticks directly beneath it — keep in sync with
+     components/Header.tsx. */
+  --header-h: 122px;
+
+  /* Tells the browser this is a dark UI, so native chrome — scrollbars,
+     form controls, the <select> popup — renders dark instead of stark white. */
+  color-scheme: dark;
+}
+
+@media (min-width: 768px) {
+  :root {
+    /* md+: nav merges into the single logo row (Header.tsx's md:grid-cols-3),
+       so the header goes back to one row's height. */
+    --header-h: 81px;
+  }
+}
+
+/* ── Scrollbars ───────────────────────────────────────────────────────────
+   Default OS scrollbars render as a bright slab against #121212. These are
+   sized and coloured to sit inside the palette: transparent track, a thumb
+   just above the border colour, brand green on hover.
+
+   Two mechanisms exist and they don't compose: Chrome supports BOTH the
+   standard `scrollbar-width`/`scrollbar-color` and the `::-webkit-scrollbar`
+   pseudo-elements, but setting the standard ones makes it ignore the
+   pseudo-elements entirely — losing the hover/active states and the slim
+   variant. So the standard properties are scoped to engines that have no
+   pseudo-element support (Firefox), and Blink/WebKit get the richer version.
+   ───────────────────────────────────────────────────────────────────────── */
+@supports not selector(::-webkit-scrollbar) {
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: #3a3a3a transparent;
+  }
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #3a3a3a;
+  border-radius: 999px;
+  /* transparent border + background-clip insets the thumb so it reads as a
+     floating pill rather than filling the whole gutter */
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #4d4d4d;
+}
+
+::-webkit-scrollbar-thumb:active {
+  background-color: #70b21d;
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* Slimmer variant for scroll areas nested inside a panel (drawer, dropdown). */
+.scrollbar-slim::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+.scrollbar-slim::-webkit-scrollbar-thumb {
+  border-width: 1px;
+}
+
+html {
+  scroll-behavior: smooth;
+  /* anchor jumps (#catalog) shouldn't land under the sticky nav */
+  scroll-padding-top: var(--header-h);
+}
+
+body {
+  background-color: #121212;
+  color: #ffffff;
+}
+
+::selection {
+  background-color: #70b21d;
+  color: #121212;
+}
+
+/* visible keyboard focus, kept brand-consistent */
+:focus-visible {
+  outline: 2px solid #70b21d;
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
