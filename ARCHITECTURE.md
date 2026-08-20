@@ -361,6 +361,39 @@ returning the same shape — no component above should need to change, only
 the data-fetching layer. Order submission stays WhatsApp-based in Phase 2
 unless/until a real payment gateway is scoped separately.
 
+**Customer capture, orders & email marketing (planned — "Option B"):** the
+client wants to move beyond WhatsApp-only ordering toward capturing customer
+data at checkout, sending marketing emails, and an admin dashboard showing
+customers and purchase stats. No real product data or a confirmed
+backend/hosting choice exists yet, so nothing below is built — this is the
+shape the frontend groundwork (`Customer`/`Order` in `lib/types.ts`, the
+optional `email` field on `CartDrawer`'s checkout form, the `/admin` route
+stub) is aimed at, so that wiring it up later is additive rather than a
+rebuild:
+
+- **API layer:** a lightweight layer — Next.js API routes in this same repo,
+  or a small separate service — sitting in front of the database. Whether
+  that coexists with or replaces the Django catalog endpoint above is not
+  decided; either way the frontend keeps talking to the same `Product`,
+  `Customer` and `Order` shapes regardless of what's behind the API.
+- **Storage:** Postgres. The checkout form in `CartDrawer` already collects
+  everything a `Customer` record needs (name, phone, optional email, area) —
+  submitting it creates/updates a `Customer` row and an `Order` row (cart
+  lines, total, timestamp, status), keyed the same way `lib/whatsapp.ts`
+  already builds the WhatsApp message today. The WhatsApp handoff (§5) isn't
+  replaced by this — it stays the order-confirmation channel; the database
+  record is what makes a customer/order **queryable** afterward.
+- **Email marketing:** a transactional/marketing email integration (e.g.
+  Resend) triggered from the admin dashboard, sending to the `email` column
+  on stored `Customer` rows. Nothing sends automatically off a checkout —
+  captured email is a passive future-marketing signal, not an opt-in
+  confirmation flow, until that's explicitly built and the client has
+  decided what "opted in" means.
+- **Dashboard:** `/admin` — currently a static "coming soon" stub
+  (`app/admin/page.tsx`), unlinked from the storefront and with no real
+  authentication. Real staff login is a prerequisite for wiring any customer
+  data into it, not an afterthought once the backend exists.
+
 ---
 
 ## 9. Open Items / Not Yet Built
@@ -381,3 +414,7 @@ unless/until a real payment gateway is scoped separately.
 - [x] Footer with contact details + delivery coverage (`components/Footer.tsx`)
 - [x] Sticky bottom mobile action bar — built (`components/MobileActionBar.tsx`)
 - [x] Hero CTAs (`Browse Catalog` / `Order via WhatsApp`) — built (§4a.1)
+- [x] Option B groundwork — `Customer`/`Order` types (`lib/types.ts`), optional
+      email capture at checkout (`CartDrawer`, `lib/whatsapp.ts`), `/admin`
+      stub route — built (2026-08-20), see §8. No backend, no real dashboard,
+      no persistence — groundwork only

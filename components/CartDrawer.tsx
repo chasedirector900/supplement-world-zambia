@@ -233,6 +233,10 @@ export default function CartDrawer() {
                   <p className="mt-1 text-xs text-red-400">{phoneError}</p>
                 )}
               </div>
+              {/* Optional for a WhatsApp order — only required to unlock "Pay
+                  online now" below. Captured either way for a future
+                  customer record (lib/types.ts's Customer), not sent in the
+                  WhatsApp message itself. */}
               <div>
                 <input
                   value={email}
@@ -240,7 +244,7 @@ export default function CartDrawer() {
                   onBlur={() => touch("email")}
                   type="email"
                   inputMode="email"
-                  placeholder="Email (needed to pay online)"
+                  placeholder="Email (optional — needed to pay online)"
                   aria-invalid={touched.email && !!emailError}
                   className={`h-12 w-full rounded-lg border bg-charcoal px-3 text-base text-ink placeholder:text-muted focus:border-brand sm:text-sm ${
                     touched.email && emailError ? "border-red-500/70" : "border-border"

@@ -14,7 +14,15 @@ export const PAYMENT_LABELS: Record<PaymentPreference, string> = {
 export interface CustomerLocation {
   name: string;
   phone: string;
-  email: string;
+  /**
+   * Optional — required only to unlock "Pay online now" (Flutterwave needs
+   * it). For a cash/Mobile-Money-on-delivery order it's captured purely for
+   * a future customer record (see the `Customer` shape in lib/types.ts) and
+   * potential marketing sends; deliberately left out of the WhatsApp message
+   * body below, since that message is the order record, not a marketing
+   * opt-in.
+   */
+  email?: string;
   area: string; // e.g. "Woodlands, Lusaka" (province)
   address: string; // street address / landmark for delivery
   payment: PaymentPreference;

@@ -109,3 +109,39 @@ export interface Testimonial {
    */
   photo?: string;
 }
+
+/**
+ * ---- Phase 2 groundwork — not persisted anywhere yet ----
+ *
+ * `Customer` and `Order` are the shapes the future backend (Postgres via a
+ * Next.js API layer, see ARCHITECTURE.md §8) will be built against once it
+ * exists. Nothing in this repo constructs, stores, or reads one today — the
+ * checkout form still only builds a WhatsApp message (`lib/whatsapp.ts`).
+ * They're defined now so the checkout form, API routes and admin dashboard
+ * all get typed against the same shape from day one instead of it getting
+ * invented ad hoc when the real database lands.
+ */
+export interface Customer {
+  id: string;
+  name: string;
+  phone: string;
+  /** Optional — captured at checkout for future marketing sends, never required to place an order. */
+  email?: string;
+  /** Delivery province, e.g. "Lusaka Province" — matches lib/contact.ts's SERVICE_AREAS. */
+  area: string;
+  /** ISO timestamp of this customer's first checkout. */
+  firstSeenAt: string;
+}
+
+export type OrderStatus = "pending" | "confirmed" | "fulfilled" | "cancelled";
+
+export interface Order {
+  id: string;
+  customerId: Customer["id"];
+  lines: CartLine[];
+  totalZMW: number;
+  /** ISO timestamp. */
+  placedAt: string;
+  /** Staff-managed — orders arrive as "pending" until confirmed over WhatsApp/on delivery. */
+  status: OrderStatus;
+}

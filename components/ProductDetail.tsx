@@ -190,25 +190,33 @@ export default function ProductDetail({ product }: { product: Product }) {
             </div>
           </div>
 
+          {/* Same recipe as the hero's Browse Catalog / Order via WhatsApp
+              buttons (app/page.tsx) — h-12, px-6, text-sm — on desktop
+              (`sm:` and up), where they sit side by side (roughly half
+              width each) and read fine at that height.
+              On mobile they're full-width and stacked, so the same 48px
+              height reads as a thin flat strip against that much width —
+              bumped to h-16/text-base there so the touch target actually
+              looks as substantial as it is. */}
           <div className="mt-6 flex flex-col gap-3 sm:flex-row">
             <button
               onClick={handleAddToCart}
-              className="flex h-12 flex-1 items-center justify-center rounded-xl bg-brand text-sm font-semibold text-charcoal shadow-glow transition hover:bg-brand-light active:scale-[0.98]"
+              className="flex h-16 sm:h-12 flex-1 items-center justify-center whitespace-nowrap rounded-xl bg-brand px-6 sm:px-4 text-base sm:text-sm font-semibold text-charcoal shadow-glow transition hover:bg-brand-light active:scale-[0.98]"
             >
               Add to Cart
             </button>
             <button
               onClick={handleInstantOrder}
-              className="flex h-12 flex-1 items-center justify-center gap-2 rounded-xl border border-brand px-4 text-sm font-semibold text-brand transition hover:bg-brand/10 active:scale-[0.98]"
+              className="flex h-16 sm:h-12 flex-1 items-center justify-center gap-2 whitespace-nowrap rounded-xl border border-brand bg-charcoal/40 px-6 sm:px-4 text-base sm:text-sm font-semibold text-brand backdrop-blur-sm transition hover:bg-brand/10 active:scale-[0.98]"
             >
-              <WhatsAppIcon size={17} />
+              <WhatsAppIcon size={18} className="shrink-0" />
               Instant WhatsApp Order
             </button>
           </div>
 
           {/* Right at the moment of deciding to buy — this is where "is this
               actually genuine?" gets answered, not buried in the footer. */}
-          <div className="mt-4">
+          <div className="mt-5">
             <TrustBadges />
           </div>
 
